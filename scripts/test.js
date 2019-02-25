@@ -3,7 +3,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 const path = require("path");
 let paths = require("./utils/paths");
 const overrides = require('../config-overrides');
-const rewireJestConfig = require("./utils/rewireJestConfig");
 const createJestConfigPath = paths.scriptVersion + "/scripts/utils/createJestConfig";
 
 const pathsConfigPath = `${paths.scriptVersion}/config/paths.js`;
@@ -27,8 +26,7 @@ const config = createJestConfig(
 // restore overrides for rewireJestConfig
 packageJson.jest = jestOverrides;
 // override createJestConfig in memory
-require.cache[require.resolve(createJestConfigPath)].exports =
-  () => overrides.jest(rewireJestConfig(config));
+require.cache[require.resolve(createJestConfigPath)].exports = () => overrides.jest(config);
 // Passing the --scripts-version on to the original test script can result
 // in the test script rejecting it as an invalid option. So strip it out of
 // the command line arguments before invoking the test script.
